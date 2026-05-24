@@ -1,0 +1,28 @@
+# Avinash Sreekumar
+
+> Cross-platform full-stack developer in Trivandrum, India. Ships fintech, web, mobile, and on-device AI products end-to-end. Open to remote contract work.
+
+## About
+Avinash "Avi" Sreekumar is an independent full-stack developer with deep experience across React, Node.js, MongoDB, Flutter, and native Android (Kotlin). He specialises in fintech and data-visualisation work, and recently shipped four products solo in six months — including a production stock-portfolio tracker, a Flutter game on the Play Store, and a native Android chat app running Gemma 3n entirely on-device via LiteRT. Previously Lead Web Developer at MeOmics (UK, 2024–2025); MA Digital Media Design from Birkbeck, University of London.
+
+## Projects
+- [Stock Portfolio Pro](https://stockportfolio.pro) — production fintech dashboard with hand-rolled D3 charts, real-time market data, Stripe-gated paid features. Node/Express/MongoDB. Public read-only demo at stockportfolio.pro/demo.
+- [Localyze](https://avisre.github.io/#work) — native Android chat app running Gemma 3n locally via LiteRT, fully offline. Includes a Playwright eval harness. Currently in Play Store Closed Testing.
+- [The Ledger Report](https://play.google.com/store/apps/details?id=com.anonymous.stocktrackergame) — narrative business-strategy game set in India 1947. Built solo with Flutter and Riverpod. In Play Store production.
+- [Praarthana](https://play.google.com/store/apps/details?id=com.praarthana.prayerapp.avinash) — Android prayer app published to Play Store production, May 2026.
+
+## Skills
+JavaScript, TypeScript, React, Node.js, Express, MongoDB, D3.js, Flutter, Dart, Kotlin, native Android, Gemma 3n / LiteRT (on-device LLM), Playwright, fintech systems, data visualization.
+
+## Availability
+Open to remote contract work as of May 2026. Fintech and data-viz specialism preferred.
+
+## Contact
+- Email: avinashsreekumar007@gmail.com
+- LinkedIn: https://linkedin.com/in/avinash-sreekumar-102a92258
+- GitHub: https://github.com/avisre
+- Website: https://avisre.github.io/
+
+## Optional
+- [Full bio and project detail](https://avisre.github.io/llms-full.txt)
+- [Sitemap](https://avisre.github.io/sitemap.xml)

@@ -1,0 +1,24 @@
+/* TEAM */
+Developer: Avinash Sreekumar (Avi)
+Site: https://avisre.github.io/
+Contact: avinashsreekumar007@gmail.com
+LinkedIn: avinash-sreekumar-102a92258
+GitHub: avisre
+Location: Trivandrum, Kerala, India
+
+/* THANKS */
+Fraunces and Inter Tight via Google Fonts.
+Hand-drawn SVG illustrations: made by hand in the markup.
+
+/* SITE */
+Last update: 2026-05-24
+Language: English
+Doctype: HTML5
+Standards: HTML5, WAI-ARIA, schema.org JSON-LD
+Components: None — vanilla HTML, CSS, and JS.
+Software: vim, Claude Code, GitHub Pages.
+
+                _
+   __ ___ _____| |
+  / _` \ V / (_-< |
+  \__,_|\_/ /__/_|
