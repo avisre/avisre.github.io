@@ -1,27 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Avinash Sreekumar — Cross-Platform Full-Stack Developer">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Avinash Sreekumar — Full-Stack Developer">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0b1220"/>
-      <stop offset="100%" stop-color="#0f1830"/>
-    </linearGradient>
-    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#22d3ee"/>
-      <stop offset="60%" stop-color="#2dd4bf"/>
-      <stop offset="100%" stop-color="#818cf8"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="85%" cy="10%" r="55%">
-      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
-    </radialGradient>
+    <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#e8e1d0"/>
+    </pattern>
   </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <rect width="1200" height="630" fill="url(#glow)"/>
-  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" fill="#e6ecf5">
-    <text x="80" y="160" font-size="28" fill="#9aa7c2" letter-spacing="3" font-weight="500">AVINASH SREEKUMAR</text>
-    <text x="80" y="270" font-size="80" font-weight="800" letter-spacing="-1">Cross-Platform</text>
-    <text x="80" y="360" font-size="80" font-weight="800" letter-spacing="-1" fill="url(#grad)">Full-Stack Developer</text>
-    <text x="80" y="440" font-size="30" fill="#cbd5e1">React  ·  Node.js  ·  Flutter  ·  Android (Kotlin)  ·  On-Device AI</text>
-    <text x="80" y="500" font-size="26" fill="#9aa7c2">4 products shipped in 6 months  ·  Open to remote contract</text>
-    <text x="80" y="570" font-size="22" fill="#22d3ee">avisre.github.io</text>
+  <rect width="1200" height="630" fill="#fdfbf5"/>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+
+  <!-- Corner ornaments -->
+  <g fill="none" stroke="#c47b5a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M40 120 C 44 76, 76 44, 120 40"/>
+    <path d="M1160 510 C 1156 554, 1124 586, 1080 590"/>
+  </g>
+  <g fill="none" stroke="#7a9e7e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1160 120 C 1156 76, 1124 44, 1080 40"/>
+    <path d="M40 510 C 44 554, 76 586, 120 590"/>
+  </g>
+
+  <!-- Wavy divider -->
+  <path d="M120 470 Q 195 454, 270 470 T 420 470 T 570 470 T 720 470 T 870 470 T 1020 470 T 1080 470"
+        fill="none" stroke="#c47b5a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Coffee cup illustration on the right -->
+  <g transform="translate(880,180)" fill="none" stroke="#2b2926" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-30 -90 q 14 -22 0 -44 q -14 -22 0 -40" stroke="#c47b5a"/>
+    <path d="M10 -86 q 16 -26 0 -50 q -16 -26 0 -42" stroke="#7a9e7e"/>
+    <path d="M50 -90 q 14 -22 0 -44 q -14 -22 0 -40" stroke="#c47b5a"/>
+    <ellipse cx="20" cy="180" rx="120" ry="14" fill="#fdfbf5"/>
+    <path d="M-80 -40 L -70 160 q 90 22 180 0 L 100 -40 Z" fill="#fdfbf5"/>
+    <ellipse cx="20" cy="-40" rx="100" ry="14" fill="#c47b5a" stroke="#2b2926"/>
+    <path d="M100 -10 q 50 6 48 50 q -2 42 -48 48"/>
+  </g>
+
+  <g font-family="'Fraunces', Georgia, serif" fill="#2b2926">
+    <text x="80" y="200" font-size="34" font-style="italic" fill="#5c7d5f">Hello there ~</text>
+    <text x="80" y="300" font-size="74" font-weight="600">Hi, I&#8217;m <tspan font-style="italic" fill="#c47b5a">Avi</tspan></text>
+    <text x="80" y="380" font-size="44" font-weight="500" fill="#6b6660">Full-stack developer</text>
+    <text x="80" y="430" font-size="44" font-weight="500" fill="#6b6660">fintech &amp; consumer apps</text>
+  </g>
+  <g font-family="'Inter Tight', system-ui, sans-serif" fill="#6b6660">
+    <text x="80" y="560" font-size="22">Trivandrum, Kerala &middot; avisre.github.io</text>
   </g>
 </svg>
