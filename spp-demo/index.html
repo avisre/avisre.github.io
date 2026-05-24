@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stock Portfolio Pro — Demo Dashboard</title>
+<meta name="description" content="A read-only demo of the stockportfolio.pro dashboard with a 5-stock sample portfolio and recent market data." />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0b1220" />
+<link rel="canonical" href="https://avisre.github.io/spp-demo/" />
+<meta property="og:title" content="Stock Portfolio Pro — Demo Dashboard" />
+<meta property="og:description" content="Read-only 5-stock sample portfolio with live-style charts and metrics." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://avisre.github.io/spp-demo/" />
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root {
+  --bg: #0b1220;
+  --bg-2: #0f172a;
+  --panel: #111a2e;
+  --panel-2: #16213c;
+  --border: #1f2c4a;
+  --text: #e6ecf5;
+  --muted: #94a3b8;
+  --accent: #3b82f6;
+  --accent-2: #60a5fa;
+  --pos: #22c55e;
+  --neg: #ef4444;
+  --warn: #f59e0b;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+  background: radial-gradient(1200px 600px at 10% -10%, #1d3a8a22 0%, transparent 60%),
+              radial-gradient(900px 500px at 100% 0%, #7c3aed1a 0%, transparent 50%),
+              var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent-2); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Demo banner */
+.demo-banner {
+  background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
+  color: #1a1a1a;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px 18px;
+  font-size: 13px;
+  letter-spacing: .2px;
+}
+.demo-banner a {
+  color: #0b1220;
+  text-decoration: underline;
+  font-weight: 800;
+  margin-left: 6px;
+}
+
+/* Top bar */
+.navbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(11, 18, 32, 0.85);
+  backdrop-filter: blur(8px);
+  position: sticky; top: 0; z-index: 20;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  display: grid; place-items: center; color: white; font-weight: 800;
+}
+.brand-name { font-weight: 700; letter-spacing: .2px; }
+.nav-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  border: 1px solid var(--border); background: var(--panel); color: var(--text); cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.btn:hover { background: var(--panel-2); }
+.btn-primary { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-color: #2563eb; }
+.btn-primary:hover { filter: brightness(1.05); }
+
+/* Layout */
+.container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+.dash-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.dash-title { margin: 0 0 4px 0; font-size: 28px; letter-spacing: -.4px; }
+.dash-sub { margin: 0; color: var(--muted); font-size: 14px; }
+.dash-update { color: var(--muted); font-size: 12px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--panel); }
+
+/* KPIs */
+.dash-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+.dash-kpi {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
+  box-shadow: 0 1px 0 #ffffff04 inset;
+}
+.dash-kpi-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .6px; }
+.dash-kpi-value { font-size: 24px; font-weight: 700; margin-top: 6px; }
+.dash-kpi-delta { font-size: 12px; margin-top: 4px; color: var(--muted); }
+.dash-kpi-delta.pos { color: var(--pos); }
+.dash-kpi-delta.neg { color: var(--neg); }
+
+/* Cards */
+.dash-charts { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 20px; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
+.card-title { margin: 0; font-size: 16px; font-weight: 700; }
+.dash-controls { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); }
+.dash-toggle {
+  border: 0; background: transparent; color: var(--muted); font-size: 12px; font-weight: 600;
+  padding: 6px 10px; border-radius: 999px; cursor: pointer;
+}
+.dash-toggle.active { background: var(--accent); color: #fff; }
+.dash-chart { height: 320px; width: 100%; }
+.alloc-chart { height: 240px; width: 100%; }
+.alloc-legend { list-style: none; margin: 12px 0 0 0; padding: 0; font-size: 13px; }
+.alloc-legend li { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed var(--border); }
+.alloc-legend li:last-child { border-bottom: 0; }
+.alloc-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+
+/* Table */
+.dash-table-wrap { overflow-x: auto; border-radius: 12px; }
+table.dash-table {
+  width: 100%; border-collapse: collapse; min-width: 880px;
+}
+.dash-table th, .dash-table td {
+  text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 13px;
+}
+.dash-table th { color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; font-size: 11px; background: var(--bg-2); }
+.dash-table tr:hover td { background: #ffffff04; }
+.dash-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.dash-table .pos { color: var(--pos); font-weight: 600; }
+.dash-table .neg { color: var(--neg); font-weight: 600; }
+.dash-table .sym {
+  display: inline-block; padding: 2px 6px; background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 6px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px;
+}
+.dash-row-name { font-weight: 600; }
+.dash-row-sector { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+/* Tooltip */
+.chart-tooltip {
+  position: absolute; pointer-events: none; background: rgba(15, 23, 42, .95);
+  color: #fff; padding: 8px 10px; border-radius: 8px; font-size: 12px;
+  border: 1px solid var(--border); box-shadow: 0 6px 20px #0008; opacity: 0; transition: opacity .1s;
+  z-index: 30; white-space: nowrap;
+}
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--border); padding: 18px 24px;
+  color: var(--muted); font-size: 12px;
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .dash-kpis { grid-template-columns: repeat(2, 1fr); }
+  .dash-charts { grid-template-columns: 1fr; }
+  .nav-actions .nav-secondary { display: none; }
+  .container { padding: 16px; }
+  .dash-title { font-size: 22px; }
+  .dash-kpi-value { font-size: 20px; }
+}
+@media (max-width: 540px) {
+  .dash-kpis { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dash-kpi { padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+<div class="demo-banner" role="status">
+  DEMO MODE — sample portfolio for demonstration. The live product is at
+  <a href="https://stockportfolio.pro/" target="_blank" rel="noopener">stockportfolio.pro</a>.
+</div>
+
+<header class="navbar">
+  <div class="brand">
+    <div class="brand-mark">SP</div>
+    <span class="brand-name">stockportfolio.pro</span>
+  </div>
+  <nav class="nav-actions">
+    <a class="btn nav-secondary" href="https://stockportfolio.pro/" target="_blank" rel="noopener">Home</a>
+    <a class="btn nav-secondary" href="https://avisre.github.io" target="_blank" rel="noopener">About developer</a>
+    <a class="btn btn-primary" href="https://stockportfolio.pro/register.html" target="_blank" rel="noopener">Sign up free</a>
+  </nav>
+</header>
+
+<main class="container">
+  <header class="dash-header">
+    <div>
+      <h1 class="dash-title">Sample Portfolio</h1>
+      <p class="dash-sub">A sample 5-stock portfolio with recent market data. Sign up to build your own.</p>
+    </div>
+    <div class="dash-update" id="dash-updated">Loading…</div>
+  </header>
+
+  <!-- KPIs -->
+  <section class="dash-kpis" aria-label="Portfolio summary">
+    <article class="dash-kpi">
+      <div class="dash-kpi-label">Total Value</div>
+      <div class="dash-kpi-value" id="kpi-total">—</div>
+      <div class="dash-kpi-delta" id="kpi-total-delta">&nbsp;</div>
+    </article>
+    <article class="dash-kpi">
+      <div class="dash-kpi-label">Day Change</div>
+      <div class="dash-kpi-value" id="kpi-day">—</div>
+      <div class="dash-kpi-delta" id="kpi-day-delta">&nbsp;</div>
+    </article>
+    <article class="dash-kpi">
+      <div class="dash-kpi-label">Total Gain / Loss</div>
+      <div class="dash-kpi-value" id="kpi-gain">—</div>
+      <div class="dash-kpi-delta" id="kpi-gain-delta">&nbsp;</div>
+    </article>
+    <article class="dash-kpi">
+      <div class="dash-kpi-label">Holdings</div>
+      <div class="dash-kpi-value" id="kpi-holdings">0</div>
+      <div class="dash-kpi-delta">5 positions across 3 sectors</div>
+    </article>
+  </section>
+
+  <!-- Charts -->
+  <section class="dash-charts">
+    <article class="card">
+      <header class="card-head">
+        <h2 class="card-title">Portfolio Value</h2>
+        <div class="dash-controls" id="perf-range" role="tablist">
+          <button class="dash-toggle" data-range="1M">1M</button>
+          <button class="dash-toggle" data-range="3M">3M</button>
+          <button class="dash-toggle" data-range="6M">6M</button>
+          <button class="dash-toggle active" data-range="1Y">1Y</button>
+        </div>
+      </header>
+      <div id="perf-chart" class="dash-chart"></div>
+    </article>
+
+    <article class="card">
+      <header class="card-head">
+        <h2 class="card-title">Allocation</h2>
+      </header>
+      <div id="alloc-chart" class="alloc-chart"></div>
+      <ul class="alloc-legend" id="alloc-legend"></ul>
+    </article>
+  </section>
+
+  <!-- Holdings -->
+  <section class="card">
+    <header class="card-head">
+      <h2 class="card-title">Holdings</h2>
+      <span style="color: var(--muted); font-size: 12px;">5 positions • read-only demo</span>
+    </header>
+    <div class="dash-table-wrap">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Symbol</th>
+            <th class="num">Shares</th>
+            <th class="num">Buy Price</th>
+            <th class="num">Current</th>
+            <th class="num">Total Cost</th>
+            <th class="num">Market Value</th>
+            <th class="num">P/L</th>
+            <th class="num">% Chg (Day)</th>
+          </tr>
+        </thead>
+        <tbody id="holdings-list"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Sector / Stats panel -->
+  <section class="dash-charts" style="margin-top: 20px;">
+    <article class="card">
+      <header class="card-head">
+        <h2 class="card-title">Per-Holding Performance (1Y)</h2>
+      </header>
+      <div id="stocks-chart" class="dash-chart"></div>
+    </article>
+    <article class="card">
+      <header class="card-head">
+        <h2 class="card-title">Quick Stats</h2>
+      </header>
+      <div id="quick-stats" style="font-size: 13px;"></div>
+    </article>
+  </section>
+</main>
+
+<footer class="footer">
+  <div>© 2026 stockportfolio.pro — built by <a href="https://avisre.github.io" target="_blank" rel="noopener">Avinash Sreekumar</a></div>
+  <div>Demo data snapshot taken from market close. Real product fetches live prices via Yahoo Finance + Alpha Vantage.</div>
+</footer>
+
+<div id="chart-tooltip" class="chart-tooltip"></div>
+
+<script>
+// ============================================================
+// SPP Demo (static fallback) — no backend, no /api calls.
+// Data baked-in at build time from real Yahoo Finance quotes
+// and 1-year daily history.
+// ============================================================
+
+const DEMO_PORTFOLIO = [
+  { _id: 'demo-aapl', symbol: 'AAPL', name: 'Apple Inc.',           sector: 'Technology',         shares: 120, purchasePrice: 148.32, purchaseDate: '2023-03-15' },
+  { _id: 'demo-msft', symbol: 'MSFT', name: 'Microsoft Corp.',      sector: 'Technology',         shares: 65,  purchasePrice: 285.10, purchaseDate: '2023-05-22' },
+  { _id: 'demo-tsla', symbol: 'TSLA', name: 'Tesla, Inc.',          sector: 'Consumer Cyclical',  shares: 45,  purchasePrice: 192.84, purchaseDate: '2024-01-09' },
+  { _id: 'demo-nvda', symbol: 'NVDA', name: 'NVIDIA Corporation',   sector: 'Technology',         shares: 80,  purchasePrice: 412.55, purchaseDate: '2024-04-18' },
+  { _id: 'demo-jpm',  symbol: 'JPM',  name: 'JPMorgan Chase & Co.', sector: 'Financial Services', shares: 50,  purchasePrice: 156.40, purchaseDate: '2023-09-04' }
+];
+
+const SECTOR_COLORS = {
+  'Technology': '#3b82f6',
+  'Consumer Cyclical': '#a855f7',
+  'Financial Services': '#22c55e'
+};
+const SYMBOL_COLORS = {
+  AAPL: '#60a5fa', MSFT: '#10b981', TSLA: '#a855f7', NVDA: '#76ff03', JPM: '#fbbf24'
+};
+
+const fmtMoney = (v) => '$' + (v >= 0 ? '' : '') + Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtMoneyShort = (v) => {
+  if (Math.abs(v) >= 1e12) return '$' + (v / 1e12).toFixed(2) + 'T';
+  if (Math.abs(v) >= 1e9) return '$' + (v / 1e9).toFixed(2) + 'B';
+  if (Math.abs(v) >= 1e6) return '$' + (v / 1e6).toFixed(2) + 'M';
+  if (Math.abs(v) >= 1e3) return '$' + (v / 1e3).toFixed(1) + 'K';
+  return '$' + v.toFixed(2);
+};
+const fmtPct = (v) => (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
+
+let QUOTES = {};
+let HISTORY = {};
+
+async function loadData() {
+  const [q, h] = await Promise.all([
+    fetch('data/quotes.json').then(r => r.json()),
+    fetch('data/history.json').then(r => r.json())
+  ]);
+  QUOTES = q; HISTORY = h;
+}
+
+function computeRows() {
+  return DEMO_PORTFOLIO.map(row => {
+    const q = QUOTES[row.symbol] || {};
+    const current = q.price ?? row.purchasePrice;
+    const prev = q.prev ?? current;
+    const dayChange = current - prev;
+    const dayChangePct = prev ? (dayChange / prev) * 100 : 0;
+    const cost = row.purchasePrice * row.shares;
+    const mv = current * row.shares;
+    const pl = mv - cost;
+    const plPct = cost ? (pl / cost) * 100 : 0;
+    return { ...row, current, prev, dayChange, dayChangePct, cost, mv, pl, plPct };
+  });
+}
+
+function renderKPIs(rows) {
+  const totalCost = rows.reduce((s, r) => s + r.cost, 0);
+  const totalMV = rows.reduce((s, r) => s + r.mv, 0);
+  const totalPL = totalMV - totalCost;
+  const totalPLPct = totalCost ? (totalPL / totalCost) * 100 : 0;
+  const totalDay = rows.reduce((s, r) => s + r.dayChange * r.shares, 0);
+  const prevTotalMV = totalMV - totalDay;
+  const totalDayPct = prevTotalMV ? (totalDay / prevTotalMV) * 100 : 0;
+
+  document.getElementById('kpi-total').textContent = fmtMoney(totalMV);
+  const td = document.getElementById('kpi-total-delta');
+  td.textContent = 'Cost basis ' + fmtMoney(totalCost);
+
+  document.getElementById('kpi-day').textContent = (totalDay >= 0 ? '+' : '-') + fmtMoney(Math.abs(totalDay)).slice(1);
+  const dd = document.getElementById('kpi-day-delta');
+  dd.textContent = fmtPct(totalDayPct) + ' today';
+  dd.className = 'dash-kpi-delta ' + (totalDay >= 0 ? 'pos' : 'neg');
+
+  document.getElementById('kpi-gain').textContent = (totalPL >= 0 ? '+' : '-') + fmtMoney(Math.abs(totalPL)).slice(1);
+  const gd = document.getElementById('kpi-gain-delta');
+  gd.textContent = fmtPct(totalPLPct) + ' all time';
+  gd.className = 'dash-kpi-delta ' + (totalPL >= 0 ? 'pos' : 'neg');
+
+  document.getElementById('kpi-holdings').textContent = rows.length;
+  document.getElementById('dash-updated').textContent = 'Last updated ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function renderHoldings(rows) {
+  const tbody = document.getElementById('holdings-list');
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>
+        <div class="dash-row-name">${r.name}</div>
+        <div class="dash-row-sector">${r.sector}</div>
+      </td>
+      <td><span class="sym">${r.symbol}</span></td>
+      <td class="num">${r.shares.toLocaleString()}</td>
+      <td class="num">${fmtMoney(r.purchasePrice)}</td>
+      <td class="num">${fmtMoney(r.current)}</td>
+      <td class="num">${fmtMoney(r.cost)}</td>
+      <td class="num">${fmtMoney(r.mv)}</td>
+      <td class="num ${r.pl >= 0 ? 'pos' : 'neg'}">${r.pl >= 0 ? '+' : '-'}${fmtMoney(Math.abs(r.pl)).slice(1)} (${fmtPct(r.plPct)})</td>
+      <td class="num ${r.dayChange >= 0 ? 'pos' : 'neg'}">${fmtPct(r.dayChangePct)}</td>
+    </tr>
+  `).join('');
+}
+
+function renderAllocation(rows) {
+  const el = document.getElementById('alloc-chart');
+  el.innerHTML = '';
+  const w = el.clientWidth, h = el.clientHeight || 240;
+  const r = Math.min(w, h) / 2 - 8;
+  const svg = d3.select(el).append('svg').attr('width', w).attr('height', h);
+  const g = svg.append('g').attr('transform', `translate(${w/2},${h/2})`);
+
+  const data = rows.map(d => ({ symbol: d.symbol, value: d.mv, sector: d.sector }));
+  const pie = d3.pie().value(d => d.value).sort(null);
+  const arc = d3.arc().innerRadius(r * 0.55).outerRadius(r);
+  const arcs = pie(data);
+
+  g.selectAll('path').data(arcs).enter().append('path')
+    .attr('d', arc)
+    .attr('fill', d => SYMBOL_COLORS[d.data.symbol])
+    .attr('stroke', 'var(--panel)').attr('stroke-width', 2)
+    .style('cursor', 'pointer')
+    .on('mousemove', (ev, d) => showTooltip(ev, `<b>${d.data.symbol}</b><br>${fmtMoney(d.data.value)} (${((d.data.value / d3.sum(data, x=>x.value))*100).toFixed(1)}%)`))
+    .on('mouseleave', hideTooltip);
+
+  const total = d3.sum(data, d => d.value);
+  g.append('text').attr('text-anchor', 'middle').attr('dy', -4)
+    .attr('fill', 'var(--muted)').attr('font-size', 11).text('TOTAL');
+  g.append('text').attr('text-anchor', 'middle').attr('dy', 14)
+    .attr('fill', 'var(--text)').attr('font-size', 15).attr('font-weight', 700)
+    .text(fmtMoneyShort(total));
+
+  const legend = document.getElementById('alloc-legend');
+  legend.innerHTML = data.map(d => `
+    <li>
+      <span><span class="alloc-dot" style="background:${SYMBOL_COLORS[d.symbol]}"></span>${d.symbol}</span>
+      <span>${((d.value/total)*100).toFixed(1)}%</span>
+    </li>
+  `).join('');
+}
+
+function buildPortfolioSeries(rows, days) {
+  // Combine each symbol's daily close into a portfolio total at each date.
+  // Use the intersection of dates so the chart is monotonic.
+  const symbols = rows.map(r => r.symbol);
+  const seriesPerSymbol = {};
+  let baseDates = null;
+  for (const s of symbols) {
+    const h = HISTORY[s] || [];
+    const slice = days ? h.slice(-days) : h;
+    seriesPerSymbol[s] = new Map(slice.map(p => [p.d, p.c]));
+    if (!baseDates) baseDates = slice.map(p => p.d);
+    else baseDates = baseDates.filter(d => seriesPerSymbol[s].has(d));
+  }
+  return baseDates.map(d => {
+    let total = 0;
+    for (const r of rows) total += (seriesPerSymbol[r.symbol].get(d) || r.purchasePrice) * r.shares;
+    return { d: new Date(d), v: total };
+  });
+}
+
+function renderPerfChart(rows, rangeDays) {
+  const el = document.getElementById('perf-chart');
+  el.innerHTML = '';
+  const data = buildPortfolioSeries(rows, rangeDays);
+  if (!data.length) return;
+  const margin = { top: 14, right: 14, bottom: 28, left: 60 };
+  const w = el.clientWidth, h = el.clientHeight || 320;
+  const innerW = w - margin.left - margin.right;
+  const innerH = h - margin.top - margin.bottom;
+
+  const svg = d3.select(el).append('svg').attr('width', w).attr('height', h);
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const x = d3.scaleTime().domain(d3.extent(data, d => d.d)).range([0, innerW]);
+  const y = d3.scaleLinear().domain(d3.extent(data, d => d.v)).nice().range([innerH, 0]);
+
+  // grid
+  g.append('g')
+    .attr('color', 'var(--border)')
+    .call(d3.axisLeft(y).ticks(5).tickSize(-innerW).tickFormat(''))
+    .call(s => s.select('.domain').remove())
+    .call(s => s.selectAll('line').attr('stroke-dasharray', '2,3').attr('opacity', .5));
+
+  // area
+  const area = d3.area().x(d => x(d.d)).y0(innerH).y1(d => y(d.v));
+  const grad = svg.append('defs').append('linearGradient')
+    .attr('id', 'perfGrad').attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', 1);
+  grad.append('stop').attr('offset', '0%').attr('stop-color', '#3b82f6').attr('stop-opacity', 0.5);
+  grad.append('stop').attr('offset', '100%').attr('stop-color', '#3b82f6').attr('stop-opacity', 0);
+  g.append('path').datum(data).attr('d', area).attr('fill', 'url(#perfGrad)');
+
+  // line
+  const line = d3.line().x(d => x(d.d)).y(d => y(d.v));
+  g.append('path').datum(data).attr('fill', 'none').attr('stroke', '#60a5fa').attr('stroke-width', 2).attr('d', line);
+
+  // axes
+  g.append('g').attr('transform', `translate(0,${innerH})`)
+    .attr('color', 'var(--muted)')
+    .call(d3.axisBottom(x).ticks(Math.min(6, data.length)).tickFormat(d3.timeFormat('%b %y')));
+  g.append('g').attr('color', 'var(--muted)')
+    .call(d3.axisLeft(y).ticks(5).tickFormat(fmtMoneyShort));
+
+  // hover line + tooltip
+  const bisect = d3.bisector(d => d.d).left;
+  const hoverLine = g.append('line').attr('y1', 0).attr('y2', innerH)
+    .attr('stroke', 'var(--muted)').attr('stroke-dasharray', '3,3').style('opacity', 0);
+  const hoverDot = g.append('circle').attr('r', 4).attr('fill', '#60a5fa').style('opacity', 0);
+  svg.on('mousemove', function (ev) {
+    const [mx] = d3.pointer(ev, this);
+    const xVal = x.invert(mx - margin.left);
+    const i = Math.max(0, Math.min(data.length - 1, bisect(data, xVal)));
+    const d = data[i];
+    if (!d) return;
+    hoverLine.attr('x1', x(d.d)).attr('x2', x(d.d)).style('opacity', 0.7);
+    hoverDot.attr('cx', x(d.d)).attr('cy', y(d.v)).style('opacity', 1);
+    showTooltip(ev, `<b>${d3.timeFormat('%d %b %Y')(d.d)}</b><br>${fmtMoney(d.v)}`);
+  }).on('mouseleave', () => { hoverLine.style('opacity', 0); hoverDot.style('opacity', 0); hideTooltip(); });
+}
+
+function renderStocksChart(rows) {
+  // Normalised performance: each symbol = 100 at start of 1Y window
+  const el = document.getElementById('stocks-chart');
+  el.innerHTML = '';
+  const margin = { top: 14, right: 60, bottom: 28, left: 40 };
+  const w = el.clientWidth, h = el.clientHeight || 320;
+  const innerW = w - margin.left - margin.right;
+  const innerH = h - margin.top - margin.bottom;
+  const svg = d3.select(el).append('svg').attr('width', w).attr('height', h);
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const symbols = rows.map(r => r.symbol);
+  const series = symbols.map(s => {
+    const h = HISTORY[s] || [];
+    if (!h.length) return { symbol: s, points: [] };
+    const base = h[0].c;
+    return { symbol: s, points: h.map(p => ({ d: new Date(p.d), v: (p.c / base) * 100 })) };
+  });
+
+  const allDates = series.flatMap(s => s.points.map(p => p.d));
+  const allVals = series.flatMap(s => s.points.map(p => p.v));
+  if (!allDates.length) return;
+
+  const x = d3.scaleTime().domain(d3.extent(allDates)).range([0, innerW]);
+  const y = d3.scaleLinear().domain(d3.extent(allVals)).nice().range([innerH, 0]);
+
+  g.append('g').attr('color', 'var(--border)')
+    .call(d3.axisLeft(y).ticks(5).tickSize(-innerW).tickFormat(''))
+    .call(s => s.select('.domain').remove())
+    .call(s => s.selectAll('line').attr('stroke-dasharray', '2,3').attr('opacity', .5));
+
+  const line = d3.line().x(d => x(d.d)).y(d => y(d.v));
+  for (const s of series) {
+    g.append('path').datum(s.points)
+      .attr('fill', 'none').attr('stroke', SYMBOL_COLORS[s.symbol] || '#94a3b8').attr('stroke-width', 1.8)
+      .attr('d', line);
+    // label at right edge
+    const last = s.points[s.points.length - 1];
+    if (last) {
+      g.append('text').attr('x', x(last.d) + 6).attr('y', y(last.v) + 4)
+        .attr('fill', SYMBOL_COLORS[s.symbol]).attr('font-size', 11).attr('font-weight', 600)
+        .text(`${s.symbol} ${(last.v - 100 >= 0 ? '+' : '')}${(last.v - 100).toFixed(0)}%`);
+    }
+  }
+
+  g.append('g').attr('transform', `translate(0,${innerH})`).attr('color', 'var(--muted)')
+    .call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat('%b %y')));
+  g.append('g').attr('color', 'var(--muted)')
+    .call(d3.axisLeft(y).ticks(5).tickFormat(d => d.toFixed(0)));
+  // reference line at 100
+  g.append('line').attr('x1', 0).attr('x2', innerW).attr('y1', y(100)).attr('y2', y(100))
+    .attr('stroke', '#ffffff33').attr('stroke-dasharray', '4,4');
+}
+
+function renderQuickStats(rows) {
+  const el = document.getElementById('quick-stats');
+  const sectors = {};
+  for (const r of rows) {
+    const k = r.sector;
+    sectors[k] = (sectors[k] || 0) + r.mv;
+  }
+  const totalMV = rows.reduce((s, r) => s + r.mv, 0);
+  const best = rows.slice().sort((a,b) => b.plPct - a.plPct)[0];
+  const worst = rows.slice().sort((a,b) => a.plPct - b.plPct)[0];
+  const sectorList = Object.entries(sectors).sort((a,b) => b[1] - a[1]).map(([k, v]) => `
+    <li style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--border);">
+      <span><span class="alloc-dot" style="background:${SECTOR_COLORS[k] || '#94a3b8'}"></span>${k}</span>
+      <span>${((v/totalMV)*100).toFixed(1)}%</span>
+    </li>`).join('');
+  el.innerHTML = `
+    <div style="color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px;">By Sector</div>
+    <ul style="list-style:none; padding:0; margin:0 0 14px 0;">${sectorList}</ul>
+    <div style="color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px;">Best / Worst</div>
+    <div style="display:flex; gap: 10px; flex-wrap: wrap;">
+      <div style="flex:1; min-width: 140px; padding:10px; background: var(--bg-2); border-radius: 8px; border: 1px solid var(--border);">
+        <div style="font-size:11px; color: var(--muted);">Best performer</div>
+        <div style="font-weight:700; margin-top:2px;">${best.symbol}</div>
+        <div class="pos" style="font-size:12px; margin-top:2px;">${fmtPct(best.plPct)}</div>
+      </div>
+      <div style="flex:1; min-width: 140px; padding:10px; background: var(--bg-2); border-radius: 8px; border: 1px solid var(--border);">
+        <div style="font-size:11px; color: var(--muted);">Worst performer</div>
+        <div style="font-weight:700; margin-top:2px;">${worst.symbol}</div>
+        <div class="${worst.plPct >= 0 ? 'pos' : 'neg'}" style="font-size:12px; margin-top:2px;">${fmtPct(worst.plPct)}</div>
+      </div>
+    </div>
+  `;
+}
+
+// Tooltip helpers
+const tooltipEl = document.getElementById('chart-tooltip');
+function showTooltip(ev, html) {
+  tooltipEl.innerHTML = html;
+  tooltipEl.style.left = (ev.pageX + 12) + 'px';
+  tooltipEl.style.top = (ev.pageY - 28) + 'px';
+  tooltipEl.style.opacity = 1;
+}
+function hideTooltip() { tooltipEl.style.opacity = 0; }
+
+function setupRangeButtons(rows) {
+  const buttons = document.querySelectorAll('#perf-range .dash-toggle');
+  const ranges = { '1M': 21, '3M': 63, '6M': 126, '1Y': null };
+  buttons.forEach(b => b.addEventListener('click', () => {
+    buttons.forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    renderPerfChart(rows, ranges[b.dataset.range]);
+  }));
+}
+
+let RESIZE_TIMER;
+function setupResize(rows) {
+  window.addEventListener('resize', () => {
+    clearTimeout(RESIZE_TIMER);
+    RESIZE_TIMER = setTimeout(() => {
+      const activeRange = document.querySelector('#perf-range .dash-toggle.active')?.dataset.range || '1Y';
+      const ranges = { '1M': 21, '3M': 63, '6M': 126, '1Y': null };
+      renderPerfChart(rows, ranges[activeRange]);
+      renderAllocation(rows);
+      renderStocksChart(rows);
+    }, 150);
+  });
+}
+
+(async function init() {
+  try {
+    await loadData();
+  } catch (e) {
+    console.error('Failed to load data', e);
+    document.getElementById('dash-updated').textContent = 'Failed to load data';
+    return;
+  }
+  const rows = computeRows();
+  renderKPIs(rows);
+  renderHoldings(rows);
+  renderAllocation(rows);
+  renderPerfChart(rows, null);
+  renderStocksChart(rows);
+  renderQuickStats(rows);
+  setupRangeButtons(rows);
+  setupResize(rows);
+})();
+</script>
+</body>
+</html>
