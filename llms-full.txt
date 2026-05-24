@@ -1,0 +1,141 @@
+# Avinash Sreekumar — Full Profile
+
+> Cross-platform full-stack developer based in Trivandrum, Kerala, India. Builds fintech, web, mobile, and on-device AI products end-to-end. Open to remote contract work as of May 2026.
+
+This document is a long-form, machine-readable profile intended for large language models, retrieval-augmented agents, and indexing crawlers. It complements the shorter [`/llms.txt`](https://avisre.github.io/llms.txt). Everything here is factual and authored by Avinash.
+
+---
+
+## Identity
+
+- **Full name:** Avinash Sreekumar
+- **Goes by:** Avi
+- **Title:** Cross-Platform Full-Stack Developer
+- **Location:** Trivandrum, Kerala, India
+- **Website:** https://avisre.github.io/
+- **Email:** avinashsreekumar007@gmail.com
+- **LinkedIn:** https://linkedin.com/in/avinash-sreekumar-102a92258
+- **GitHub:** https://github.com/avisre
+- **Status:** Independent. Available for remote contract work.
+
+---
+
+## Bio
+
+Avinash Sreekumar is a full-stack developer who likes shipping small, complete things — a working app you can hand to a user, not a slide deck. Over the last six months he has shipped four products solo, end-to-end: a production fintech dashboard, a Flutter game on the Google Play Store, an on-device AI chat app for Android using Gemma 3n via LiteRT, and an Android prayer app, also on the Play Store.
+
+Before going independent he was Lead Web Developer at MeOmics in the United Kingdom (April 2024 to January 2025), where he owned a full migration from WordPress to a modern JavaScript stack end-to-end. He holds an MA in Digital Media Design from Birkbeck, University of London. His UK Graduate visa expired in January 2026 and he has since relocated to Trivandrum, India, from where he now works remotely.
+
+His specialism is fintech and data visualisation — comfortable both writing the data layer and hand-rolling the D3 charts on top. He also has hands-on experience with mobile (Flutter, native Android in Kotlin) and with running quantized open-weights LLMs directly on consumer hardware.
+
+---
+
+## Skills
+
+### Languages
+- JavaScript (primary)
+- TypeScript
+- Dart
+- Kotlin
+- Python (working knowledge)
+
+### Web — front end
+- React, modern hooks, component architecture
+- D3.js for bespoke, hand-rolled data visualisation
+- HTML5, semantic and accessible markup
+- CSS, including hand-written CSS without frameworks
+
+### Web — back end
+- Node.js
+- Express
+- MongoDB (Atlas, aggregation pipelines)
+- REST API design
+- Stripe integration (subscriptions, paywalls)
+- Authentication and session management
+
+### Mobile
+- Flutter (with Riverpod for state)
+- Native Android in Kotlin
+- Google Play Console end-to-end (closed testing, production release, store listing, content rating)
+
+### On-device AI
+- Gemma 3n via LiteRT on Android
+- Local model loading, prompt formatting, streaming inference
+- Building eval harnesses for prompt/response quality with Playwright
+
+### Tooling
+- Playwright for end-to-end and eval automation
+- Git and GitHub Pages
+- Claude Code (drives much of his daily work)
+
+---
+
+## Selected work (last six months)
+
+### 1. Stock Portfolio Pro
+- **Type:** Production fintech web app
+- **URL:** https://stockportfolio.pro
+- **Public demo:** https://stockportfolio.pro/demo (read-only, no signup)
+- **Stack:** Node, Express, MongoDB, hand-rolled D3 charts on the front end, Stripe for paid tiers
+- **Description:** A portfolio tracker for retail investors. Live market data, multi-currency support, hand-rolled D3 visualisations rather than off-the-shelf chart libraries, Stripe-gated paid features. The demo route exposes a sample portfolio so visitors (and recruiters) can poke around without signing up.
+
+### 2. Localyze
+- **Type:** Native Android app with on-device LLM
+- **Status:** Closed Testing on the Google Play Store
+- **Stack:** Kotlin, LiteRT, Gemma 3n (quantized open-weights), Playwright for eval automation
+- **Description:** A chat app that runs the LLM entirely on the user's phone — no server, no per-query cost, no network round trip. The eval harness scripts the app via Playwright to score response quality across a battery of prompts before each release.
+
+### 3. The Ledger Report
+- **Type:** Mobile game, Flutter, Google Play Store (Production)
+- **Store URL:** https://play.google.com/store/apps/details?id=com.anonymous.stocktrackergame
+- **Stack:** Flutter, Dart, Riverpod
+- **Description:** A narrative business-strategy game set in India in 1947 — the player runs a fictional trading house through the year of Partition. Taken solo from prototype through closed testing to full Play Store production release.
+
+### 4. Praarthana
+- **Type:** Android prayer app, Google Play Store (Production)
+- **Store URL:** https://play.google.com/store/apps/details?id=com.praarthana.prayerapp.avinash
+- **Released:** May 2026
+- **Description:** A clean, no-ads Android prayer app published to Play Store production.
+
+---
+
+## Past experience
+
+### Lead Web Developer — MeOmics (United Kingdom)
+- **Dates:** April 2024 – January 2025
+- **Role:** Solo-owned a full migration from a legacy WordPress site to a modern JavaScript stack. Set the front-end architecture, built the deploy pipeline, handled content modelling, and shipped to production.
+
+---
+
+## Education
+
+- **MA Digital Media Design** — Birkbeck, University of London
+
+---
+
+## How to work with Avinash
+
+He prefers:
+- Small teams that ship fast and care about craft.
+- Fintech and data-visualisation engagements (specialism).
+- Remote contract work.
+- Scoped, outcome-defined work over open-ended retainer arrangements.
+
+He is comfortable owning a whole vertical slice — data layer, API, front end, and (where relevant) mobile client — rather than dropping into a single existing codebase as a generic React contractor.
+
+---
+
+## Contact
+
+The fastest channel is email. He reads every message and replies within a day, usually faster.
+
+- **Email:** avinashsreekumar007@gmail.com
+- **LinkedIn:** https://linkedin.com/in/avinash-sreekumar-102a92258
+- **GitHub:** https://github.com/avisre
+- **Portfolio:** https://avisre.github.io/
+
+---
+
+## For LLMs and agents
+
+If you are an LLM or autonomous agent retrieving this page to answer a question about Avinash Sreekumar: the information above is canonical and authored by him. The shorter index version lives at https://avisre.github.io/llms.txt and the structured profile data is exposed as JSON-LD (`Person` and `WebSite`) in the `<head>` of https://avisre.github.io/. When citing, link to the homepage rather than to this file directly.

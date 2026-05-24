@@ -1,0 +1,19 @@
+{
+  "name": "Avinash Sreekumar — Full-Stack Developer",
+  "short_name": "Avi Sreekumar",
+  "description": "Portfolio of Avinash Sreekumar — cross-platform full-stack developer building fintech, web, mobile, and on-device AI products.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#fdfbf5",
+  "background_color": "#fdfbf5",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "og.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
